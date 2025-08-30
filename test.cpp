@@ -1,52 +1,79 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
-#include<memory>
+#include <condition_variable>
+#include <queue>
+#include <chrono>
+
 using namespace std;
 
-class BankAccount {
-private:
-    int balance;
+const int BUFFER_SIZE = 5;
+queue<int> buffer;
+
+class Semaphore {
+    int count;
     mutex mtx;
+    condition_variable cv;
 
 public:
-    BankAccount(int initialBalance) : balance(initialBalance) {}
+    Semaphore(int value = 0) : count(value) {}
 
-    void withdraw(int amount, const string& user) {
-        lock_guard<mutex> lock(mtx); // Lock access
-
-        if (balance >= amount) {
-            cout << user << " is withdrawing " << amount << "\n";
-            balance -= amount;
-            cout << user << " successfully withdrew. Balance left: " << balance << "\n";
-        } else {
-            cout << user << " tried to withdraw " << amount << " but insufficient funds!\n";
-        }
+    void acquire() {
+        unique_lock<mutex> lock(mtx);
+        cv.wait(lock, [&]() { return count > 0; });
+        count--;
     }
 
-    int getBalance() {
-        lock_guard<mutex> lock(mtx);
-        return balance;
+    void release() {
+        unique_lock<mutex> lock(mtx);
+        count++;
+        cv.notify_one();
     }
 };
-void processWithdraw(shared_ptr<BankAccount>account, int amount, string user)
-{
-    account->withdraw(amount, user);
+
+mutex mtx;                    // Protects buffer
+Semaphore empty(BUFFER_SIZE); // Initially all slots are empty
+Semaphore full(0);           // Initially no item is present
+
+void producer(int id) {
+    for (int i = 0; i < 10; ++i) {
+        int item = id * 100 + i;
+        empty.acquire(); // Wait for empty slot
+        {
+            lock_guard<mutex> lock(mtx);
+            buffer.push(item);
+            cout << "Producer " << id << " produced: " << item << endl;
+        }
+        full.release(); // Signal that item is available
+        this_thread::sleep_for(chrono::milliseconds(100));
+    }
 }
+
+void consumer(int id) {
+    for (int i = 0; i < 10; ++i) {
+        full.acquire(); // Wait for item
+        int item;
+        {
+            lock_guard<mutex> lock(mtx);
+            item = buffer.front();
+            buffer.pop();
+            cout << "Consumer " << id << " consumed: " << item << endl;
+        }
+        empty.release(); // Signal empty slot
+        this_thread::sleep_for(chrono::milliseconds(150));
+    }
+}
+
 int main() {
-    // BankAccount account(100); // Initial balance
-    shared_ptr<BankAccount>account = make_shared<BankAccount>(100);
-    thread t1(processWithdraw, account, 50, "user1");
-    thread t2(processWithdraw, account, 30, "user2");
+    thread p1(producer, 1);
+    thread p2(producer, 2);
+    thread c1(consumer, 1);
+    thread c2(consumer, 2);
 
-    thread t3(processWithdraw, account, 20, "user3");
+    p1.join();
+    p2.join();
+    c1.join();
+    c2.join();
 
-
-
-    t1.join();
-    t2.join();
-    t3.join();
-
-    cout << "Final Balance: " << account->getBalance() << endl;
     return 0;
 }

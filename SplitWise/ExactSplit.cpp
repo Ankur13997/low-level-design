@@ -8,8 +8,12 @@ private:
 public:
     bool validate(vector<shared_ptr<Split>>& splits, double amount) override {
         
-        (void)splits;
-        (void)amount;
+        double curr=0;
+        for(auto split:splits)
+        {
+            curr+=split->getowedMoney();
+        }
+        if(curr!=amount)return false;
         return true;
     }
 };

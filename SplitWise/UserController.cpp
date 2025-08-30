@@ -15,6 +15,7 @@ public:
         allUsers=unordered_map<int,shared_ptr<User>>();
     }
     ~UserController(){}
+    
 
     void addUser(shared_ptr<User>user)
     {
@@ -25,10 +26,10 @@ public:
     {
         if(allUsers.find(userId)!=allUsers.end())
         {
-            cout<<"User Found"<<endl;
+            //cout<<"User Found"<<endl;
             return allUsers[userId];
         }
-        cout<<"User Not Found"<<endl;
+        //cout<<"User Not Found"<<endl;
         return nullptr;
     }
 

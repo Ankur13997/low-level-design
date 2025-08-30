@@ -32,6 +32,31 @@ public:
 
         }
     }
+
+    void showBalanceofUser(shared_ptr<User> user)
+    {
+    if (!user || !user->getUserSheet()) {
+        cout << "Invalid user or no balance sheet found.\n";
+        return;
+    }
+
+    auto userSheet = user->getUserSheet()->getUserSheet();
+    if (userSheet.empty()) {
+        cout << "No balances for user: " << user->getUserName() << endl;
+        return;
+    }
+
+    cout << "Balances for user: " << user->getUserName() << endl;
+    for (const auto& [otherUserId, balance] : userSheet) {
+        if (balance.owed > 0) {
+            cout << "You owe User " << otherUserId << ": " << balance.owed << endl;
+        }
+        if (balance.recieve > 0) {
+            cout << "User " << otherUserId << " owes you: " << balance.recieve << endl;
+        }
+    }
+}
+
 };
 
 

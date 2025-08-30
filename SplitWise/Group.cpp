@@ -15,10 +15,12 @@ private:
     shared_ptr<ExpenseController>expenseController;
 public:
     static inline int counterId=0;
-    Group(string groupName, shared_ptr<User> createdBy,vector<shared_ptr<User>>allUsers,shared_ptr<ExpenseController>expenseController):
-    groupId(++counterId),groupName(groupName),createdBy(createdBy),expenseController(expenseController)
+    Group(string groupName, shared_ptr<User> createdBy):
+    groupId(++counterId),groupName(groupName),createdBy(createdBy)
     {
-        // expenseController=make_shared<ExpenseController>();
+        expenseController=make_shared<ExpenseController>();
+        allUsers=vector<shared_ptr<User>>();
+        allExpenses=vector<shared_ptr<Expense>>();
     }
 
     ~Group(){}
@@ -37,7 +39,8 @@ public:
 
     void createExpense(shared_ptr<User> paidByUser,double amount,vector<shared_ptr<Split>>&allSplits,SplitType type)
     {
-        expenseController->createExpense(paidByUser,amount,allSplits,type);
+        auto expense = expenseController->createExpense(paidByUser,amount,allSplits,type);
+        addExpense(expense);
     }
 
 

@@ -22,7 +22,7 @@ public:
     {
         timeStamp=TimeStamp::getCurrentTimeStamp();
     }
-    ~Expense();
+    ~Expense(){}
 
     int getExpenseId(){return expenseId;}
     shared_ptr<User>paidBy(){return paidByUser;}
