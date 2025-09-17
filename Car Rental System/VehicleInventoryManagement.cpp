@@ -11,6 +11,7 @@ void VehicleInventoryManagement::addVehicle(shared_ptr<Vehicle>vehicle)
     int id=vehicle->getVehicleId();
     
 //    cout<<"vehicle id: "<<id<<endl;
+    //vechicleStatus->insert({id,1});
      (*vechicleStatus)[id]=1;
      (*allVehicle)[id]=vehicle;
 }

@@ -12,7 +12,10 @@ SRC = \
     ElevatorCar.cpp \
     InnerButton.cpp \
     ElevatorController.cpp \
-    InnerButtonDispatcher.cpp
+    InnerButtonDispatcher.cpp \
+    ExternalButton.cpp \
+    ExternalButtonDispatcher.cpp \
+    OddEvenDispatcher.cpp \
 
 
 
