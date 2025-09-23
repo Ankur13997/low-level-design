@@ -13,5 +13,6 @@ public:
 
     }
     ~User(){}
+    shared_ptr<Card>getCard(){return card;};
 };
 

@@ -23,7 +23,10 @@ int Atm::calculateAmount()
     return 2000*noOfTwoThousandNotes + 500*noOfFiveHundredNotes + 100*noOfOneHundredNotes;
 }
 
-int Atm::getAmount(){return atmAmount;}
+int Atm::getAmount(){
+    cout<<"CalculateAmount() "<<Atm::calculateAmount()<<endl;
+    return atmAmount;
+}
 
 void Atm::updateAmount(int newAmount)
 {

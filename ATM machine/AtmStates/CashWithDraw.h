@@ -1,14 +1,13 @@
 #pragma once
 #include "States.h"
-
+class CashWithdrawProcessor;
 class CashWithDraw :public States
 {
 private:
     /* data */
+    shared_ptr<CashWithdrawProcessor>cashWithdrawProcessor;
 public:
-    CashWithDraw(/* args */){
-        cout<<"ATM is in CashWithDraw State"<<endl;
-    }
+    CashWithDraw(/* args */);
     ~CashWithDraw(){}
     void cashWithdrawal(shared_ptr<Atm> atm, shared_ptr<Card> card,int withdrawAmount)override;
 
@@ -17,5 +16,6 @@ public:
     void exit(shared_ptr<Atm> atm)override;
     
     void returnCard()override;
+    shared_ptr<CashWithdrawProcessor> createChain()override;
 };
 

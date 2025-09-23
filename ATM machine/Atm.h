@@ -26,9 +26,14 @@ public:
     {
         state=newState;
     }
-
+    int getTwoThousandCount(){return noOfTwoThousandNotes;}
+    int getFiveHundredCount(){return noOfFiveHundredNotes;}
+    int getOneHundredCount(){return noOfOneHundredNotes;}
     shared_ptr<States> getState(){return state;}
 
+    void updatetwo(int count){noOfTwoThousandNotes-=count;}
+    void updatefive(int count){noOfFiveHundredNotes-=count;}
+    void updateone(int count){noOfOneHundredNotes-=count;}
 
 };
 

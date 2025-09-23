@@ -5,6 +5,7 @@
 using namespace std;
 class Atm;
 class Card;
+class CashWithdrawProcessor;
 class States
 {
 private:
@@ -42,6 +43,10 @@ public:
     }
     virtual void showState(){
         cout<<"OOPS!! Something went wrong"<<endl;
+    }
+    virtual shared_ptr<CashWithdrawProcessor> createChain(){
+       cout<<"OOPS!! Something went wrong"<<endl;
+       return nullptr;
     }
 };
 
